@@ -1,0 +1,28 @@
+app:
+  app_name: "lottery-sys" # 应用名称
+  version: "v1.0.1" # 版本
+  port: 8081    # 服务启用端口
+  run_mode: dev # 可选dev、release模式
+
+
+db:
+  addr: "0.0.0.0:3306" # db地址
+  user: "root"              # user
+  password: "123456"        # password
+  database: "lottery_system" # dbname
+  max_idle_conn: 5          # 最大空闲连接数
+  max_open_conn: 20         # 最大连接数
+  max_idle_time: 300        # 最大空闲时间
+
+log:
+  level: info # 日志等级
+  log_path: ./log # 日志目录
+  file_name: lottery_single.log # 日志名称（默认分info 和 error两种）
+  max_size: 10  # 一个日志多少MB
+  max_backups: 10 # 最多保留多少个日志
+
+redis:
+  addr: "0.0.0.0:6379"
+  db: 0
+  password: ""
+  poolsize: 100
