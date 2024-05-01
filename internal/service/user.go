@@ -7,7 +7,6 @@ import (
 	"lottery_single/internal/model"
 	"lottery_single/internal/pkg/constant"
 	"lottery_single/internal/pkg/middlewares/gormcli"
-	"lottery_single/internal/pkg/middlewares/log"
 	"lottery_single/internal/pkg/utils"
 	"lottery_single/internal/repo"
 )
@@ -35,27 +34,35 @@ func GetUserService() UserService {
 }
 
 func (p *userService) Login(ctx context.Context, userName, passWord string) (*LoginRsp, error) {
+	// 检查密码是否为空或长度不足
+	if len(passWord) < 6 {
+		return nil, fmt.Errorf("password is too short")
+	}
+
 	info, err := p.userReop.GetByName(gormcli.GetDB(), userName)
 	if err != nil {
 		return nil, err
 	}
-	log.InfoContextf(ctx, "info is: +%v\n", info)
-	log.InfoContextf(ctx, "info.Password=%s,passWord=%s\n", info.Password, passWord)
+
 	// 验证密码是否正确
 	err = bcrypt.CompareHashAndPassword([]byte(info.Password), []byte(passWord))
 	if err != nil {
 		return nil, fmt.Errorf("password error: %v", err)
 	}
+
+	// 生成 JWT Token
 	token, err := utils.GenerateJwtToken(constant.SecretKey, constant.Issuer, info.Id, userName)
 	if err != nil {
 		return nil, err
 	}
+
 	response := &LoginRsp{
 		UserID: info.Id,
 		Token:  token,
 	}
 	return response, nil
 }
+
 func (p *userService) Register(ctx context.Context, user *model.User) error {
 	// Since the method now expects a *model.User, you don't need to create a new user instance
 	// inside this method. Instead, you can directly use the provided user object.
@@ -79,5 +86,5 @@ func (p *userService) Register(ctx context.Context, user *model.User) error {
 }
 func isHashed(password string) bool {
 
-	return len(password) > 5
+	return len(password) > 1
 }

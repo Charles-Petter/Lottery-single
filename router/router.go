@@ -43,6 +43,11 @@ func setAdminRoutes(r *gin.Engine) {
 	adminGroup.POST("/register", handlers.Register)
 
 	adminGroup.POST("/get_lucky", handlers.LotteryV1)
+	//用户管理
+	adminGroup.POST("/add_user", handlers.AddUser)
+	adminGroup.PUT("/update_user/:userID", handlers.UpdateUser)
+	adminGroup.DELETE("/delete_user/:userID", handlers.DeleteUser)
+	adminGroup.GET("/get_all_users", handlers.GetAllUsers)
 }
 
 func setLotteryRoutes(r *gin.Engine) {
@@ -50,4 +55,8 @@ func setLotteryRoutes(r *gin.Engine) {
 	// 基础版获取中奖
 	lotteryGroup.POST("/v1/get_lucky", handlers.LotteryV1)
 
+	//lotteryGroup.Use(AuthMiddleWare()) // Apply authentication middleware to this group
+
+	// Route to handle lottery result recording
+	//lotteryGroup.POST("/record_result", handlers.LotteryResult)
 }

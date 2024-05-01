@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	"lottery_single/internal/handlers/params"
 	"lottery_single/internal/model"
 	"lottery_single/internal/pkg/constant"
@@ -37,6 +38,7 @@ func Register(c *gin.Context) {
 	log.Infof("register req:%v\n", h.req)
 	Run(&h)
 }
+
 func (r *RegisterHandler) CheckInput(ctx context.Context) error {
 	if r.req == nil {
 		r.resp.Code = constant.ErrInputInvalid
@@ -56,10 +58,18 @@ func (r *RegisterHandler) CheckInput(ctx context.Context) error {
 }
 
 func (r *RegisterHandler) Process(ctx context.Context) {
-	// 将请求参数封装成 *model.User 类型的对象
+	// 哈希加密密码
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(r.req.PassWord), bcrypt.DefaultCost)
+	if err != nil {
+		log.ErrorContextf(ctx, "RegisterHandler|Process bcrypt error: %v", err)
+		r.resp.Code = constant.ErrRegister
+		return
+	}
+
+	// 将请求参数封装成 *model.User 类型的对象，存储哈希后的密码
 	newUser := &model.User{
 		UserName: r.req.UserName,
-		Password: r.req.PassWord,
+		Password: string(hashedPassword), // 存储哈希后的密码
 		Email:    r.req.Email,
 		Mobile:   r.req.Mobile,
 		RealName: r.req.RealName,
@@ -68,13 +78,13 @@ func (r *RegisterHandler) Process(ctx context.Context) {
 	}
 
 	// 调用 service.Register 方法进行注册
-	err := r.service.Register(ctx, newUser)
+	err = r.service.Register(ctx, newUser)
 	if err != nil {
 		log.ErrorContextf(ctx, "RegisterHandler|process register err: %v", err)
 		r.resp.Code = constant.ErrRegister
 		return
 	}
 
-	// 处理注册成功后的结果（根据具体需求进行调整）
+	// 处理注册成功后的结果
 	r.resp.Data = newUser
 }

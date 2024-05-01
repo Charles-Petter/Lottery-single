@@ -52,13 +52,21 @@ func (r *UserRepo) GetByName(db *gorm.DB, userName string) (*model.User, error) 
 	return user, nil
 }
 
+//	func (r *UserRepo) GetAll(db *gorm.DB) ([]*model.User, error) {
+//		var Users []*model.User
+//		err := db.Model(&model.User{}).Where("").Order("sys_updated desc").Find(&Users).Error
+//		if err != nil {
+//			return nil, fmt.Errorf("UserRepo|GetAll:%v", err)
+//		}
+//		return Users, nil
+//	}
 func (r *UserRepo) GetAll(db *gorm.DB) ([]*model.User, error) {
-	var Users []*model.User
-	err := db.Model(&model.User{}).Where("").Order("sys_updated desc").Find(&Users).Error
+	var users []*model.User
+	err := db.Model(&model.User{}).Where("").Order("updated_at desc").Find(&users).Error
 	if err != nil {
-		return nil, fmt.Errorf("UserRepo|GetAll:%v", err)
+		return nil, fmt.Errorf("UserRepo|GetAll: %v", err)
 	}
-	return Users, nil
+	return users, nil
 }
 
 func (r *UserRepo) CountAll(db *gorm.DB) (int64, error) {
@@ -70,10 +78,10 @@ func (r *UserRepo) CountAll(db *gorm.DB) (int64, error) {
 	return num, nil
 }
 
-func (r *UserRepo) Create(db *gorm.DB, user *model.User) error {
+func (r *UserRepo) CreateUser(db *gorm.DB, user *model.User) error {
 	err := db.Model(&model.User{}).Create(user).Error
 	if err != nil {
-		return fmt.Errorf("UserRepo|Create:%v", err)
+		return fmt.Errorf("UserRepo|CreateUser:%v", err)
 	}
 	return nil
 }
@@ -117,11 +125,4 @@ func (r *UserRepo) GetFromCache(id uint) (*model.User, error) {
 	json.Unmarshal([]byte(ret), &model.User{})
 
 	return &User, nil
-}
-func (r *UserRepo) CreateUser(db *gorm.DB, user *model.User) error {
-	err := db.Model(&model.User{}).Create(user).Error
-	if err != nil {
-		return fmt.Errorf("UserRepo|CreateUser:%v", err)
-	}
-	return nil
 }

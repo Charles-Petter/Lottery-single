@@ -21,7 +21,9 @@ import (
 type AdminService interface {
 	// 用户操作
 	AddUser(ctx context.Context, user *model.User) error
-
+	UpdateUser(ctx context.Context, userID uint, user *model.User) error
+	DeleteUser(ctx context.Context, userID uint) error
+	GetAllUsers(ctx context.Context) ([]*model.User, error)
 	// 奖品操作
 	AddPrize(ctx context.Context, viewPrize *ViewPrize) error
 	AddPrizeWithCache(ctx context.Context, viewPrize *ViewPrize) error
@@ -63,7 +65,7 @@ func GetAdminService() AdminService {
 }
 
 func (a *adminService) AddUser(ctx context.Context, user *model.User) error {
-	return a.userRepo.Create(gormcli.GetDB(), user)
+	return a.userRepo.CreateUser(gormcli.GetDB(), user)
 }
 
 // GetPrizeList 获取db奖品列表
@@ -687,4 +689,41 @@ func (a *adminService) formatPrizePlan(now time.Time, prizePlanDays int, prizePl
 		}
 	}
 	return result, nil
+}
+func (a *adminService) UpdateUser(ctx context.Context, userID uint, user *model.User) error {
+	existingUser, err := a.userRepo.Get(gormcli.GetDB(), userID)
+	if err != nil {
+		return err
+	}
+	if existingUser == nil {
+		return fmt.Errorf("user with ID %d not found", userID)
+	}
+
+	// Update the fields of the existing user
+	existingUser.UserName = user.UserName
+	existingUser.Email = user.Email
+
+	// Save the updated user to the database
+	err = a.userRepo.Update(gormcli.GetDB(), existingUser)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *adminService) DeleteUser(ctx context.Context, userID uint) error {
+	err := a.userRepo.Delete(gormcli.GetDB(), userID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (a *adminService) GetAllUsers(ctx context.Context) ([]*model.User, error) {
+	users, err := a.userRepo.GetAll(gormcli.GetDB())
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
 }

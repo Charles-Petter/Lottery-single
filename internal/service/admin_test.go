@@ -210,6 +210,8 @@ func TestAddUser(t *testing.T) {
 	user1 := model.User{
 		UserName: "zhangsan",
 		Password: string(hash),
+		Age:      30,
+		Gender:   "male", // 设置性别为男性
 	}
 	if err := GetAdminService().AddUser(context.Background(), &user1); err != nil {
 		t.Logf("TestAddUser|AddUser err: %v", err)
@@ -217,6 +219,8 @@ func TestAddUser(t *testing.T) {
 	user2 := model.User{
 		UserName: "lisi",
 		Password: string(hash),
+		Age:      25,
+		Gender:   "female", // 设置性别为女性
 	}
 	if err := GetAdminService().AddUser(context.Background(), &user2); err != nil {
 		t.Logf("TestAddUser|AddUser err: %v", err)
