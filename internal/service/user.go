@@ -7,6 +7,7 @@ import (
 	"lottery_single/internal/model"
 	"lottery_single/internal/pkg/constant"
 	"lottery_single/internal/pkg/middlewares/gormcli"
+	"lottery_single/internal/pkg/middlewares/log"
 	"lottery_single/internal/pkg/utils"
 	"lottery_single/internal/repo"
 )
@@ -39,20 +40,29 @@ func (p *userService) Login(ctx context.Context, userName, passWord string) (*Lo
 		return nil, fmt.Errorf("password is too short")
 	}
 
+	log.Infof("Attempting to log in user: %s", userName)
+
 	info, err := p.userReop.GetByName(gormcli.GetDB(), userName)
 	if err != nil {
+		log.Errorf("Error fetching user: %v", err)
 		return nil, err
 	}
+
+	log.Infof("Retrieved user info: %+v", info)
 
 	// 验证密码是否正确
 	err = bcrypt.CompareHashAndPassword([]byte(info.Password), []byte(passWord))
 	if err != nil {
+		log.Errorf("Password verification failed: %v", err)
 		return nil, fmt.Errorf("password error: %v", err)
 	}
+
+	log.Infof("Password verified successfully for user: %s", userName)
 
 	// 生成 JWT Token
 	token, err := utils.GenerateJwtToken(constant.SecretKey, constant.Issuer, info.Id, userName)
 	if err != nil {
+		log.Errorf("Error generating JWT token: %v", err)
 		return nil, err
 	}
 
@@ -60,6 +70,9 @@ func (p *userService) Login(ctx context.Context, userName, passWord string) (*Lo
 		UserID: info.Id,
 		Token:  token,
 	}
+
+	log.Infof("User %s logged in successfully", userName)
+
 	return response, nil
 }
 

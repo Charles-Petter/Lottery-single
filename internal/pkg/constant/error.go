@@ -40,7 +40,8 @@ var errMsgDic = map[ErrCode]string{
 	ErrBlackedIP:        "blacked ip",
 	ErrBlackedUser:      "blacked user",
 	ErrPrizeNotEnough:   "prize not enough",
-	ErrNotWon:           "not won,please try again!",
+	//ErrNotWon:           "not won,please try again!",
+	ErrNotWon: "sorry you didn't win the prize",
 }
 
 // GetErrMsg 获取错误描述

@@ -27,14 +27,17 @@ func AuthMiddleWare() gin.HandlerFunc {
 func setRoutes(r *gin.Engine) {
 	setAdminRoutes(r)
 	setLotteryRoutes(r)
+	setBlackIpRoutes(r)
 }
 
 func setAdminRoutes(r *gin.Engine) {
 	adminGroup := r.Group("admin")
+
 	// 获取奖品列表
 	adminGroup.GET("/get_prize_list", handlers.GetPrizeList)
 	// 添加奖品
 	adminGroup.POST("/add_prize", handlers.PrizeAdd)
+
 	// 导入优惠券
 	adminGroup.POST("/import_coupon", handlers.CouponImport)
 	// 用户登录
@@ -42,7 +45,7 @@ func setAdminRoutes(r *gin.Engine) {
 	//注册
 	adminGroup.POST("/register", handlers.Register)
 
-	adminGroup.POST("/get_lucky", handlers.LotteryV1)
+	//adminGroup.POST("/get_lucky", handlers.LotteryV1)
 	//用户管理
 	adminGroup.POST("/add_user", handlers.AddUser)
 	adminGroup.PUT("/update_user/:userID", handlers.UpdateUser)
@@ -60,4 +63,17 @@ func setLotteryRoutes(r *gin.Engine) {
 	//lotteryGroup.Use(AuthMiddleWare()) // Apply authentication middleware to this group
 	// 新增抽奖结果展示路由
 	lotteryGroup.GET("/show_results", handlers.ShowLotteryResult)
+}
+
+func setBlackIpRoutes(r *gin.Engine) {
+	blackIpGroup := r.Group("/admin/blackip")
+
+	// 添加IP到黑名单
+	blackIpGroup.POST("/add", handlers.AddBlackIP)
+
+	// 删除黑名单中的IP
+	blackIpGroup.DELETE("/delete/:id", handlers.DeleteBlackIP)
+
+	// 查看所有黑名单IP
+	blackIpGroup.GET("/list", handlers.ListBlackIP)
 }

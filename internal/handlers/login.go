@@ -39,6 +39,8 @@ func Login(c *gin.Context) {
 		log.Errorf("ShouldBind login req:err+%v\n", err)
 		return
 	}
+	log.Infof("Received login request - UserName: %s, PassWord: %s", h.req.UserName, h.req.PassWord)
+
 	log.Infof("login req:%v\n", h.req)
 	Run(&h)
 }
@@ -62,6 +64,9 @@ func (l *LoginHandler) CheckInput(ctx context.Context) error {
 
 func (l *LoginHandler) Process(ctx context.Context) {
 	v, err := l.service.Login(ctx, l.req.UserName, l.req.PassWord)
+
+	log.Infof("Attempting to log in user: %s", l.req.UserName)
+
 	if err != nil {
 		log.ErrorContextf(ctx, "LoginHandler|process login err:%v", err)
 		l.resp.Code = constant.ErrLogin

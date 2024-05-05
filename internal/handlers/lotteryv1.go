@@ -147,16 +147,29 @@ func (l *LotteryHandlerV1) Process(ctx context.Context) {
 	// 6. 抽奖逻辑实现
 	prizeCode := utils.Random(constant.PrizeCodeMax)
 	log.InfoContextf(ctx, "LotteryHandlerV1|prizeCode=%d\n", prizeCode)
+	//prize, err := l.lotteryService.GetPrize(ctx, prizeCode)
+	//if err != nil {
+	//	l.resp.Code = constant.ErrInternalServer
+	//	log.ErrorContextf(ctx, "LotteryHandler|CheckBlackUser:%v", err)
+	//	return
+	//}
+
 	prize, err := l.lotteryService.GetPrize(ctx, prizeCode)
 	if err != nil {
 		l.resp.Code = constant.ErrInternalServer
-		log.ErrorContextf(ctx, "LotteryHandler|CheckBlackUser:%v", err)
+		log.ErrorContextf(ctx, "LotteryHandler|GetPrize:%v", err)
 		return
 	}
-	if prize == nil || prize.PrizeNum < 0 || (prize.PrizeNum > 0 && prize.LeftNum <= 0) {
+	if prize == nil {
 		l.resp.Code = constant.ErrNotWon
+		log.InfoContext(ctx, "LotteryHandler|GetPrize returned nil prize")
 		return
 	}
+
+	//if prize == nil || prize.PrizeNum < 0 || (prize.PrizeNum > 0 && prize.LeftNum <= 0) {
+	//	l.resp.Code = constant.ErrNotWon
+	//	return
+	//}
 
 	// 7. 有剩余奖品发放
 	if prize.PrizeNum > 0 {

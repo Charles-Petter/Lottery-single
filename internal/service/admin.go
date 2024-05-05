@@ -24,6 +24,10 @@ type AdminService interface {
 	UpdateUser(ctx context.Context, userID uint, user *model.User) error
 	DeleteUser(ctx context.Context, userID uint) error
 	GetAllUsers(ctx context.Context) ([]*model.User, error)
+	//IP黑名单
+	AddBlackIP(ctx context.Context, blackIP *model.BlackIp) error
+	DeleteBlackIP(ctx context.Context, id uint) error
+	GetAllBlackIPs(ctx context.Context) ([]*model.BlackIp, error)
 	// 奖品操作
 	AddPrize(ctx context.Context, viewPrize *ViewPrize) error
 	AddPrizeWithCache(ctx context.Context, viewPrize *ViewPrize) error
@@ -45,18 +49,20 @@ type AdminService interface {
 }
 
 type adminService struct {
-	couponRepo *repo.CouponRepo
-	prizeRepo  *repo.PrizeReop
-	userRepo   *repo.UserRepo
+	couponRepo  *repo.CouponRepo
+	prizeRepo   *repo.PrizeReop
+	userRepo    *repo.UserRepo
+	blackIpRepo *repo.BlackIpRepo
 }
 
 var adminServiceImpl *adminService
 
 func InitAdminService() {
 	adminServiceImpl = &adminService{
-		couponRepo: repo.NewCouponRepo(),
-		prizeRepo:  repo.NewPrizeRepo(),
-		userRepo:   repo.NewUserRepo(),
+		couponRepo:  repo.NewCouponRepo(),
+		prizeRepo:   repo.NewPrizeRepo(),
+		userRepo:    repo.NewUserRepo(),
+		blackIpRepo: repo.NewBlackIpRepo(),
 	}
 }
 
@@ -66,6 +72,18 @@ func GetAdminService() AdminService {
 
 func (a *adminService) AddUser(ctx context.Context, user *model.User) error {
 	return a.userRepo.CreateUser(gormcli.GetDB(), user)
+}
+
+func (a *adminService) AddBlackIP(ctx context.Context, blackIP *model.BlackIp) error {
+	return a.blackIpRepo.Create(gormcli.GetDB(), blackIP)
+}
+
+func (a *adminService) DeleteBlackIP(ctx context.Context, id uint) error {
+	return a.blackIpRepo.Delete(gormcli.GetDB(), id)
+}
+
+func (a *adminService) GetAllBlackIPs(ctx context.Context) ([]*model.BlackIp, error) {
+	return a.blackIpRepo.GetAll(gormcli.GetDB())
 }
 
 // GetPrizeList 获取db奖品列表

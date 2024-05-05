@@ -37,18 +37,60 @@ func (r *UserRepo) Get(db *gorm.DB, id uint) (*model.User, error) {
 	return User, nil
 }
 
+//func (r *UserRepo) GetByName(db *gorm.DB, userName string) (*model.User, error) {
+//	// 优先从缓存获取
+//	//user := &model.User{
+//	//	UserName: userName,
+//	//}
+//	//err := db.Model(&model.User{}).First(user).Error
+//	//if err != nil {
+//	//	if err.Error() == gorm.ErrRecordNotFound.Error() {
+//	//		return nil, nil
+//	//	}
+//	//	return nil, fmt.Errorf("UserRepo|GetByName:%v", err)
+//	//}
+//
+//	log.Infof("Attempting to fetch user by name: %s", userName)
+//
+//	user := &model.User{
+//		UserName: userName,
+//	}
+//	err := db.Model(&model.User{}).First(user).Error
+//	if err != nil {
+//		if err.Error() == gorm.ErrRecordNotFound.Error() {
+//			log.Infof("User not found with UserName: %s", userName)
+//			return nil, nil
+//		}
+//		log.Errorf("Error fetching user by name: %v", err)
+//		return nil, fmt.Errorf("UserRepo|GetByName:%v", err)
+//	}
+//
+//	log.Infof("Retrieved user from database: %+v", user)
+//
+//	return user, nil
+//}
+
 func (r *UserRepo) GetByName(db *gorm.DB, userName string) (*model.User, error) {
-	// 优先从缓存获取
+	log.Infof("Attempting to fetch user by name: %s", userName)
+
+	// 创建一个空的用户对象，并设置要查询的用户名
 	user := &model.User{
 		UserName: userName,
 	}
-	err := db.Model(&model.User{}).First(user).Error
+
+	// 根据用户名从数据库中查询用户信息
+	err := db.Model(&model.User{}).Where("user_name = ?", userName).First(user).Error
 	if err != nil {
-		if err.Error() == gorm.ErrRecordNotFound.Error() {
+		if err == gorm.ErrRecordNotFound {
+			log.Infof("User not found with UserName: %s", userName)
 			return nil, nil
 		}
-		return nil, fmt.Errorf("UserRepo|GetByName:%v", err)
+		log.Errorf("Error fetching user by name: %v", err)
+		return nil, fmt.Errorf("UserRepo|GetByName: %v", err)
 	}
+
+	log.Infof("Retrieved user from database: %+v", user)
+
 	return user, nil
 }
 

@@ -1,6 +1,9 @@
 package params
 
-import "lottery_single/internal/service"
+import (
+	"lottery_single/internal/service"
+	"time"
+)
 
 // PrizeListRequest 处理请求和响应的实体
 type PrizeListRequest struct {
@@ -37,4 +40,12 @@ type LotteryReq struct {
 
 type PrizeAddRequest struct {
 	PrizeInfo service.ViewPrize
+}
+
+type BlackIp struct {
+	ID         uint      `gorm:"primaryKey"`
+	Ip         string    `gorm:"unique"`
+	BlackTime  time.Time `gorm:"default:null"`
+	SysCreated time.Time `gorm:"autoCreateTime"`
+	SysUpdated time.Time `gorm:"autoUpdateTime"`
 }
