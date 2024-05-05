@@ -55,13 +55,26 @@ func ParseTime(str string) (time.Time, error) {
 }
 
 // Random 得到一个随机数
+//
+//	func Random(max int) int {
+//		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+//		if max < 1 {
+//			return r.Int()
+//		} else {
+//			return r.Intn(max)
+//		}
+//	}
+//
+// 初始化随机数生成器
+var randomGenerator = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+// Random 返回一个 [0, max) 范围内的随机整数
+// 如果 max <= 0，将返回 0
 func Random(max int) int {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	if max < 1 {
-		return r.Int()
-	} else {
-		return r.Intn(max)
+	if max <= 0 {
+		return 0
 	}
+	return randomGenerator.Intn(max)
 }
 
 // encrypt 对一个字符串进行加密

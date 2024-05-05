@@ -37,15 +37,23 @@ func (r *ResultRepo) Get(db *gorm.DB, id uint) (*model.Result, error) {
 	return result, nil
 }
 
+//	func (r *ResultRepo) GetAll(db *gorm.DB) ([]*model.Result, error) {
+//		var results []*model.Result
+//		err := db.Model(&model.Result{}).Where("").Order("sys_updated desc").Find(&results).Error
+//		if err != nil {
+//			return nil, fmt.Errorf("ResultRepo|GetAll:%v", err)
+//		}
+//		return results, nil
+//	}
 func (r *ResultRepo) GetAll(db *gorm.DB) ([]*model.Result, error) {
 	var results []*model.Result
-	err := db.Model(&model.Result{}).Where("").Order("sys_updated desc").Find(&results).Error
+	// Update the Order clause to use an existing column like SysCreated
+	err := db.Model(&model.Result{}).Where("").Order("sys_created desc").Find(&results).Error
 	if err != nil {
 		return nil, fmt.Errorf("ResultRepo|GetAll:%v", err)
 	}
 	return results, nil
 }
-
 func (r *ResultRepo) CountAll(db *gorm.DB) (int64, error) {
 	var num int64
 	err := db.Model(&model.Result{}).Count(&num).Error

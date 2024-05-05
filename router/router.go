@@ -54,9 +54,10 @@ func setLotteryRoutes(r *gin.Engine) {
 	lotteryGroup := r.Group("lottery")
 	// 基础版获取中奖
 	lotteryGroup.POST("/v1/get_lucky", handlers.LotteryV1)
+	// 优化V1版中奖逻辑
+	lotteryGroup.POST("/v2/get_lucky", handlers.LotteryV2)
 
 	//lotteryGroup.Use(AuthMiddleWare()) // Apply authentication middleware to this group
-
-	// Route to handle lottery result recording
-	//lotteryGroup.POST("/record_result", handlers.LotteryResult)
+	// 新增抽奖结果展示路由
+	lotteryGroup.GET("/show_results", handlers.ShowLotteryResult)
 }

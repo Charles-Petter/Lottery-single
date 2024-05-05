@@ -88,10 +88,10 @@ func (l *lotteryService) GetPrizeWithCache(ctx context.Context, prizeCode int) (
 		if lotteryPrize.PrizeCodeLow <= prizeCode &&
 			lotteryPrize.PrizeCodeHigh >= prizeCode {
 			// 中奖编码区间满足条件，说明可以中奖
-			//if lotteryPrize.PrizeType < constant.PrizeTypeEntitySmall { //如果非实物奖直接发，实物奖需要看是不是在黑名单外
-			prize = lotteryPrize
-			break
-			//}
+			if lotteryPrize.PrizeType < constant.PrizeTypeEntitySmall { //如果非实物奖直接发，实物奖需要看是不是在黑名单外
+				prize = lotteryPrize
+				break
+			}
 		}
 	}
 	return prize, nil
