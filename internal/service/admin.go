@@ -41,6 +41,7 @@ type AdminService interface {
 	UpdateDbPrizeWithCache(ctx context.Context, db *gorm.DB, prize *model.Prize, cols ...string) error
 	UpdateDbPrize(ctx context.Context, db *gorm.DB, prize *model.Prize, cols ...string) error
 	ResetPrizePlan(ctx context.Context, prize *model.Prize) error
+	DeletePrize(ctx context.Context, id uint) error
 
 	// 优惠券操作
 	GetCouponList(ctx context.Context, prizeID uint) ([]*ViewCouponInfo, int64, int64, error)
@@ -96,6 +97,13 @@ func (a *adminService) GetPrizeList(ctx context.Context) ([]*model.Prize, error)
 		return nil, fmt.Errorf("prizeService|GetPrizeList: %v", err)
 	}
 	return list, nil
+}
+
+func (a *adminService) DeletePrize(ctx context.Context, id uint) error {
+	if id <= 0 {
+		return fmt.Errorf("adminService|DeletePrize: invalid prize ID")
+	}
+	return a.prizeRepo.Delete(gormcli.GetDB(), id)
 }
 
 // GetPrizeListWithCache 获取db奖品列表
@@ -319,7 +327,8 @@ func (a *adminService) UpdatePrize(ctx context.Context, viewPrize *ViewPrize) er
 		log.Errorf("adminService|UpdatePrize Update prize err:%v", err)
 		return fmt.Errorf("adminService|UpdatePrize Update prize:%v", err)
 	}
-	return nil
+	//return nil
+	return a.prizeRepo.Update(gormcli.GetDB(), &prize)
 }
 
 func (a *adminService) UpdatePrizeWithPool(ctx context.Context, viewPrize *ViewPrize) error {

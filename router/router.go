@@ -37,6 +37,10 @@ func setAdminRoutes(r *gin.Engine) {
 	adminGroup.GET("/get_prize_list", handlers.GetPrizeList)
 	// 添加奖品
 	adminGroup.POST("/add_prize", handlers.PrizeAdd)
+	// 删除奖品
+	adminGroup.DELETE("/delete_prize/:id", handlers.DeletePrize)
+	// 更新奖品
+	adminGroup.PUT("/update_prize/:id", handlers.UpdatePrize)
 
 	// 导入优惠券
 	adminGroup.POST("/import_coupon", handlers.CouponImport)
@@ -60,20 +64,17 @@ func setLotteryRoutes(r *gin.Engine) {
 	// 优化V1版中奖逻辑
 	lotteryGroup.POST("/v2/get_lucky", handlers.LotteryV2)
 
-	//lotteryGroup.Use(AuthMiddleWare()) // Apply authentication middleware to this group
+	//lotteryGroup.Use(AuthMiddleWare())
 	// 新增抽奖结果展示路由
 	lotteryGroup.GET("/show_results", handlers.ShowLotteryResult)
 }
 
 func setBlackIpRoutes(r *gin.Engine) {
 	blackIpGroup := r.Group("/admin/blackip")
-
 	// 添加IP到黑名单
 	blackIpGroup.POST("/add", handlers.AddBlackIP)
-
 	// 删除黑名单中的IP
 	blackIpGroup.DELETE("/delete/:id", handlers.DeleteBlackIP)
-
 	// 查看所有黑名单IP
 	blackIpGroup.GET("/list", handlers.ListBlackIP)
 }

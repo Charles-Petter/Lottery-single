@@ -24,6 +24,21 @@ type Prize struct {
 	SysUpdated   *time.Time `gorm:"autoUpdateTime:datetime;column:sys_updated;type:datetime;default null;comment:修改时间;NOT NULL" json:"sys_updated"`
 	SysIp        string     `gorm:"column:sys_ip;type:varchar(50);comment:操作人IP;NOT NULL" json:"sys_ip"`
 }
+type ViewPrize struct {
+	Id           uint   `json:"id"`
+	Title        string `json:"title"`
+	PrizeNum     int    `json:"prize_num"`
+	LeftNum      int    `json:"left_num"`
+	PrizeCode    string `json:"prize_code"`
+	PrizeTime    string `json:"prize_time"`
+	Img          string `json:"img"`
+	DisplayOrder int    `json:"display_order"`
+	PrizeType    int    `json:"prize_type"`
+	BeginTime    string `json:"begin_time"`
+	EndTime      string `json:"end_time"`
+	PrizePlan    string `json:"prize_plan"`
+	SysStatus    int    `json:"sys_status"`
+}
 
 func (p *Prize) TableName() string {
 	return "t_prize"
