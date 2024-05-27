@@ -85,7 +85,7 @@ func TestAddPrize(t *testing.T) {
 	data["age"] = "23"
 
 	addPrizereq := ViewPrize{
-		Title:     "iphone",
+		Title:     "iphone15",
 		Img:       "https://p0.ssl.qhmsg.com/t016ff98b934914aca6.png",
 		PrizeNum:  10,
 		PrizeCode: "0-9999",
@@ -163,12 +163,12 @@ func TestCreateUserAutoCreateTime(t *testing.T) {
 func TestImportCoupon(t *testing.T) {
 	InitTest()
 	couponInfo := ViewCouponInfo{
-		PrizeId: 20,
-		Code: "coupon_code0000001\n" +
-			"coupon_code0000002\n" +
-			"coupon_code0000003\n" +
-			"coupon_code0000004\n" +
-			"coupon_code0000005",
+		PrizeId: 4,
+		Code: "coupon_code0000011\n" +
+			"coupon_code0000102\n" +
+			"coupon_code0000303\n" +
+			"coupon_code0005004\n" +
+			"coupon_code0006005",
 		SysCreated: time.Time{},
 		SysUpdated: time.Time{},
 		SysStatus:  1, // 正常

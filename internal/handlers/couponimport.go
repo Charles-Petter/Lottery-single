@@ -13,13 +13,11 @@ import (
 type CouponImportHandler struct {
 	req *service.ViewCouponInfo
 	// resp     PrizeAddResponse
-	resp HttpResponse
-
-	// 需要什么Service，就在这里声明
+	resp    HttpResponse
 	service service.AdminService
 }
 
-// CouponImport 获取奖品列表
+// CouponImport 导入优惠卷
 func CouponImport(c *gin.Context) {
 	// todo: 参数获取，校验
 	h := CouponImportHandler{
@@ -52,7 +50,7 @@ func (h *CouponImportHandler) CheckInput(ctx context.Context) error {
 		log.ErrorContextf(ctx, "coupon import code is invalid")
 		return fmt.Errorf("coupon import code is invalid")
 	}
-	if r.SysStatus != 1 || r.SysStatus != 2 {
+	if r.SysStatus != 1 && r.SysStatus != 2 {
 		log.ErrorContextf(ctx, "coupon import status is invalid")
 		return fmt.Errorf("coupon import status is invalid")
 	}

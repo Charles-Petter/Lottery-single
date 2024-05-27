@@ -39,17 +39,17 @@ func setAdminRoutes(r *gin.Engine) {
 	adminGroup.POST("/add_prize", handlers.PrizeAdd)
 	// 删除奖品
 	adminGroup.DELETE("/delete_prize/:id", handlers.DeletePrize)
-	// 更新奖品
-	adminGroup.PUT("/update_prize/:id", handlers.UpdatePrize)
 
 	// 导入优惠券
 	adminGroup.POST("/import_coupon", handlers.CouponImport)
+	// 获取优惠券列表
+	adminGroup.GET("/get_coupon_list", handlers.GetCouponList)
+
 	// 用户登录
 	adminGroup.POST("/login", handlers.Login)
 	//注册
 	adminGroup.POST("/register", handlers.Register)
 
-	//adminGroup.POST("/get_lucky", handlers.LotteryV1)
 	//用户管理
 	adminGroup.POST("/add_user", handlers.AddUser)
 	adminGroup.PUT("/update_user/:userID", handlers.UpdateUser)
@@ -65,7 +65,7 @@ func setLotteryRoutes(r *gin.Engine) {
 	lotteryGroup.POST("/v2/get_lucky", handlers.LotteryV2)
 
 	//lotteryGroup.Use(AuthMiddleWare())
-	// 新增抽奖结果展示路由
+	// 抽奖结果展示
 	lotteryGroup.GET("/show_results", handlers.ShowLotteryResult)
 }
 

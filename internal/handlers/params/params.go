@@ -49,3 +49,15 @@ type BlackIp struct {
 	SysCreated time.Time `gorm:"autoCreateTime"`
 	SysUpdated time.Time `gorm:"autoUpdateTime"`
 }
+
+// CouponListRequest 请求优惠券列表的参数
+type CouponListRequest struct {
+	PrizeID uint `json:"prize_id"`
+}
+
+// CouponListResponse 优惠券列表的响应
+type CouponListResponse struct {
+	Coupons        []*service.ViewCouponInfo `json:"coupons"`
+	DBCouponNum    int64                     `json:"db_coupon_num"`
+	CacheCouponNum int64                     `json:"cache_coupon_num"`
+}

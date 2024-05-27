@@ -43,26 +43,51 @@ http://localhost:8081/admin/add_prize
 
 ```
 {
-     "id": 5,
-            "title": "iphone15",
-            "prize_num": 10,
-            "left_num": 10,
-            "prize_code": "1-10",
-            "prize_time": 0,
-            "img": "https://doc-fd.zol-img.com.cn/t_s500x2000/g7/M00/05/02/ChMkK2SKcW2IGR_FAAB_sZAhtQoAARTfQPd3OsAAH_J205.jpg",
-            "display_order": 0,
-            "prize_type": 5,
-            "prize_profile": "",
-            "begin_time": "2024-04-26T17:27:44+08:00",
-            "end_time": "2024-05-03T17:27:44+08:00",
-            "prize_plan": "",
-            "prize_begin": "1000-01-01T00:00:00+08:00",
-            "prize_end": "1000-01-01T00:00:00+08:00",
-            "sys_status": 1,
-            "sys_created": "2024-04-26T17:27:44+08:00",
-            "sys_updated": "2024-04-26T17:27:44+08:00",
-            "sys_ip": ""
+  "id":6,
+  "title":"xiaomi14mi14",
+  "img":"https://p0.ssl.qhmsg.com/t016ff98b934914aca6.png",
+  "prize_num":10,
+  "prize_code":"0-9999",
+  "prize_time":0,
+  "left_num":0,
+  "prize_type":5,
+  "prize_plan":"",
+  "begin_time":"2024-05-07T13:55:16.6551796+08:00",
+  "end_time":"2024-05-14T13:55:16.6551796+08:00",
+  "display_order":0,
+  "sys_status":0
 }
 ```
 
 ![image-20240430224316628](C:\Users\Meet\AppData\Roaming\Typora\typora-user-images\image-20240430224316628.png)
+
+http://localhost:8081/admin/blackip/add
+
+```plain
+{
+    "ip": "192.168.1.100",
+    "blackTime": "2024-05-06T00:00:00Z"
+}
+```
+
+![img](https://cdn.nlark.com/yuque/0/2024/png/29337569/1714910533144-73817c43-b62d-4fae-bb8c-ec5e467a44d1.png)
+
+
+
+
+
+http://localhost:8081/admin/blackip/list
+
+![img](https://cdn.nlark.com/yuque/0/2024/png/29337569/1714910599977-3d7f036b-c9b4-41ca-87ae-f0271ab07aa5.png)
+
+http://localhost:8081/admin/blackip/delete/1
+
+![img](https://cdn.nlark.com/yuque/0/2024/png/29337569/1714910755797-6f6883a4-9af8-492c-be0c-b977de241e7c.png)
+
+
+
+
+
+http://localhost:8081/admin/delete_prize/2
+
+![img](https://cdn.nlark.com/yuque/0/2024/png/29337569/1714913920498-5ff9e8ca-a880-47fc-8237-432c31d414ab.png)

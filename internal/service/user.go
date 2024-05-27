@@ -35,6 +35,11 @@ func GetUserService() UserService {
 }
 
 func (p *userService) Login(ctx context.Context, userName, passWord string) (*LoginRsp, error) {
+	// 检查用户名是否为空
+	if userName == "" {
+		return nil, fmt.Errorf("username is required")
+	}
+
 	// 检查密码是否为空或长度不足
 	if len(passWord) < 6 {
 		return nil, fmt.Errorf("password is too short")
@@ -42,10 +47,16 @@ func (p *userService) Login(ctx context.Context, userName, passWord string) (*Lo
 
 	log.Infof("Attempting to log in user: %s", userName)
 
+	// 获取用户信息
 	info, err := p.userReop.GetByName(gormcli.GetDB(), userName)
 	if err != nil {
 		log.Errorf("Error fetching user: %v", err)
 		return nil, err
+	}
+
+	// 检查用户是否存在
+	if info == nil {
+		return nil, fmt.Errorf("user not found")
 	}
 
 	log.Infof("Retrieved user info: %+v", info)
