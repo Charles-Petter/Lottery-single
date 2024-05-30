@@ -183,7 +183,7 @@ func TestImportCoupon(t *testing.T) {
 func TestImportCouponWithCache(t *testing.T) {
 	InitTest()
 	couponInfo := ViewCouponInfo{
-		PrizeId: 20,
+		PrizeId: 4,
 		Code: "coupon_code0000001\n" +
 			"coupon_code0000002\n" +
 			"coupon_code0000003\n" +

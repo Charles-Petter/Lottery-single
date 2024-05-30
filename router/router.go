@@ -35,8 +35,11 @@ func setAdminRoutes(r *gin.Engine) {
 
 	// 获取奖品列表
 	adminGroup.GET("/get_prize_list", handlers.GetPrizeList)
-	// 添加奖品
+	// 设置添加抽奖奖品
 	adminGroup.POST("/add_prize", handlers.PrizeAdd)
+
+	// 上传图片
+	adminGroup.POST("/upload", handlers.UploadImage)
 	// 删除奖品
 	adminGroup.DELETE("/delete_prize/:id", handlers.DeletePrize)
 

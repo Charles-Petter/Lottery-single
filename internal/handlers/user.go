@@ -27,13 +27,21 @@ func AddUser(c *gin.Context) {
 }
 
 func UpdateUser(c *gin.Context) {
-	userID, _ := strconv.ParseUint(c.Param("userID"), 10, 64)
+	userID, err := strconv.ParseUint(c.Param("userID"), 10, 64)
+	if err != nil {
+		log.Errorf("UpdateUser: error parsing userID: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid userID"})
+		return
+	}
+
 	var user model.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		log.Errorf("UpdateUser: error binding user data: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
 		return
 	}
+
+	log.Infof("UpdateUser: received user data: %+v", user)
 
 	if err := service.GetAdminService().UpdateUser(c.Request.Context(), uint(userID), &user); err != nil {
 		log.Errorf("UpdateUser: error updating user: %v", err)

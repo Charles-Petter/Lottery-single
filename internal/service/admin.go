@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"lottery_single/internal/model"
 	"lottery_single/internal/pkg/constant"
@@ -719,6 +720,7 @@ func (a *adminService) formatPrizePlan(now time.Time, prizePlanDays int, prizePl
 	return result, nil
 }
 func (a *adminService) UpdateUser(ctx context.Context, userID uint, user *model.User) error {
+	// Retrieve the existing user from the database
 	existingUser, err := a.userRepo.Get(gormcli.GetDB(), userID)
 	if err != nil {
 		return err
@@ -727,9 +729,25 @@ func (a *adminService) UpdateUser(ctx context.Context, userID uint, user *model.
 		return fmt.Errorf("user with ID %d not found", userID)
 	}
 
-	// Update the fields of the existing user
+	// Update all fields of the existing user with the data from the provided user
 	existingUser.UserName = user.UserName
+	existingUser.Signature = user.Signature
 	existingUser.Email = user.Email
+	existingUser.Mobile = user.Mobile
+	existingUser.RealName = user.RealName
+	existingUser.Age = user.Age
+	existingUser.Gender = user.Gender
+
+	// Check if the password needs to be updated
+	if user.Password != "" {
+		// Generate hashed password
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return err
+		}
+		// Update password with hashed password
+		existingUser.Password = string(hashedPassword)
+	}
 
 	// Save the updated user to the database
 	err = a.userRepo.Update(gormcli.GetDB(), existingUser)
@@ -739,7 +757,6 @@ func (a *adminService) UpdateUser(ctx context.Context, userID uint, user *model.
 
 	return nil
 }
-
 func (a *adminService) DeleteUser(ctx context.Context, userID uint) error {
 	err := a.userRepo.Delete(gormcli.GetDB(), userID)
 	if err != nil {
