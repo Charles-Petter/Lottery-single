@@ -443,11 +443,12 @@ func (a *adminService) ImportCoupon(ctx context.Context, prizeID uint, codes str
 	codeList := strings.Split(codes, "\n")
 	for _, code := range codeList {
 		code = strings.TrimSpace(code)
+		currentTime := time.Now() // 创建一个临时变量来存储当前时间
 		coupon := &model.Coupon{
-			PrizeId: prizeID,
-			Code:    code,
-			//SysCreated: time.Now(),
-			SysStatus: 1,
+			PrizeId:    prizeID,
+			Code:       code,
+			SysCreated: &currentTime, // 将临时变量的地址赋给 SysCreated 字段
+			SysStatus:  1,
 		}
 		if err = a.couponRepo.Create(gormcli.GetDB(), coupon); err != nil {
 			failNum++
